@@ -32,10 +32,13 @@
   <build_depend>nav_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>tf</build_depend>
+  <build_depend>aidin_msgs</build_depend>
+  
   <exec_depend>roscpp</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>tf</exec_depend>
+  <exec_depend>aidin_msgs</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

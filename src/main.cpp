@@ -8,7 +8,8 @@
 #include <opencv2/opencv.hpp>
 #include "Astar.h"
 #include "OccMapTransform.h"
-
+#include <aidin_msgs/HeightMapPla.h> // son
+#include <aidin_msgs/height.h> // son
 
 using namespace cv;
 using namespace std;
@@ -40,10 +41,16 @@ bool start_flag;
 int rate;
 
 //-------------------------------- Callback function ---------------------------------//
-void MapCallback(const nav_msgs::OccupancyGrid& msg)
+void MapCallback(const aidin_msgs::HeightMapPla& msg)
 {
+    nav_msgs::OccupancyGrid occupancy_grid_map;
+    occupancy_grid_map = msg.occupancy;
+    
+    aidin_msgs::height height_grid_map;
+    height_grid_map = msg.height;
+
     // Get parameter
-    OccGridParam.GetOccupancyGridParam(msg);
+    OccGridParam.GetOccupancyGridParam(occupancy_grid_map);
 
     // Get map
     int height = OccGridParam.height;
@@ -54,7 +61,7 @@ void MapCallback(const nav_msgs::OccupancyGrid& msg)
     {
         for(int j=0;j<width;j++)
         {
-            OccProb = msg.data[i * width + j];
+            OccProb = occupancy_grid_map.data[i * width + j];
             OccProb = (OccProb < 0) ? 100 : OccProb; // set Unknown to 0
             // The origin of the OccGrid is on the bottom left corner of the map
             Map.at<uchar>(height-i-1, j) = 255 - round(OccProb * 255.0 / 100.0);
@@ -68,8 +75,8 @@ void MapCallback(const nav_msgs::OccupancyGrid& msg)
 
     // Publish Mask
     OccGridMask.header.stamp = ros::Time::now();
-    OccGridMask.header.frame_id = "map";
-    OccGridMask.info = msg.info;
+    OccGridMask.header.frame_id = "world";
+    OccGridMask.info = occupancy_grid_map.info;
     OccGridMask.data.clear();
     for(int i=0;i<height;i++)
     {
@@ -140,7 +147,7 @@ int main(int argc, char * argv[])
     nh_priv.param<int>("rate", rate, 10);
 
     // Subscribe topics
-    map_sub = nh.subscribe("map", 10, MapCallback);
+    map_sub = nh.subscribe("height_map_pla", 10, MapCallback);
     startPoint_sub = nh.subscribe("initialpose", 10, StartPointCallback);
     targetPoint_sub = nh.subscribe("move_base_simple/goal", 10, TargetPointtCallback);
 
