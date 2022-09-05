@@ -98,6 +98,7 @@ void StartPointCallback(const geometry_msgs::PoseWithCovarianceStamped& msg)
     Point2d src_point = Point2d(msg.pose.pose.position.x, msg.pose.pose.position.y);
     OccGridParam.Map2ImageTransform(src_point, startPoint);
 
+
     // Set flag
     startpoint_flag = true;
     if(map_flag && startpoint_flag && targetpoint_flag)
@@ -159,8 +160,10 @@ int main(int argc, char * argv[])
     ros::Rate loop_rate(rate);
     while(ros::ok())
     {
+
         if(start_flag)
-        {
+        {                          
+   
             double start_time = ros::Time::now().toSec();
             // Start planning path
             vector<Point> PathList;
@@ -168,16 +171,16 @@ int main(int argc, char * argv[])
             if(!PathList.empty())
             {
                 path.header.stamp = ros::Time::now();
-                path.header.frame_id = "map";
+                path.header.frame_id = "world";
                 path.poses.clear();
                 for(int i=0;i<PathList.size();i++)
                 {
                     Point2d dst_point;
                     OccGridParam.Image2MapTransform(PathList[i], dst_point);
-
+                    
                     geometry_msgs::PoseStamped pose_stamped;
                     pose_stamped.header.stamp = ros::Time::now();
-                    pose_stamped.header.frame_id = "map";
+                    pose_stamped.header.frame_id = "world";
                     pose_stamped.pose.position.x = dst_point.x;
                     pose_stamped.pose.position.y = dst_point.y;
                     pose_stamped.pose.position.z = 0;
