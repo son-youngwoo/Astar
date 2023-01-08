@@ -4,7 +4,6 @@
 
 #include "OccMapTransform.h"
 
-
 void OccupancyGridParam::GetOccupancyGridParam(nav_msgs::OccupancyGrid OccGrid)
 {
     // Get parameter
@@ -16,7 +15,7 @@ void OccupancyGridParam::GetOccupancyGridParam(nav_msgs::OccupancyGrid OccGrid)
 
     double roll, pitch, yaw;
     geometry_msgs::Quaternion q = OccGrid.info.origin.orientation;
-    tf::Quaternion quat(q.x, q.y, q.z, q.w); // x, y, z, w
+    tf::Quaternion quat(q.x, q.y, q.z, q.w); // x, y, z, w 
     tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
     theta = yaw;
 
@@ -32,7 +31,7 @@ void OccupancyGridParam::GetOccupancyGridParam(nav_msgs::OccupancyGrid OccGrid)
 void OccupancyGridParam::Image2MapTransform(Point& src_point, Point2d& dst_point)
 {
     // Upside down
-    Mat P_src = Mat(Vec2d(src_point.x, height - 1 - src_point.y), CV_64FC1);
+    Mat P_src = Mat(Vec2d(src_point.x, height - 1 - src_point.y), CV_64FC1); // 64bit, float, 1 channal
     // Rotate and translate
     Mat P_dst = R * P_src + t;
 
@@ -45,6 +44,7 @@ void OccupancyGridParam::Map2ImageTransform(Point2d& src_point, Point& dst_point
     Mat P_src = Mat(Vec2d(src_point.x, src_point.y), CV_64FC1);
     // Rotate and translate
     Mat P_dst = R.inv() * (P_src - t);
+
     // Upside down
     dst_point.x = round(P_dst.at<double>(0, 0));
     dst_point.y = height - 1 - round(P_dst.at<double>(1, 0));

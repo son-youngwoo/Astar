@@ -8,8 +8,8 @@
     <node pkg="astar" type="astar" name="astar" output="screen">
         <param name="Euclidean" value="true"/>
         <param name="OccupyThresh" value="-1"/>
-        <param name="InflateRadius" value="0.25"/>
-        <param name="rate" value="10"/>
+        <param name="InflateRadius" value="0.70"/>
+        <param name="rate" value="1"/>
     </node>
 
     ################ start rviz ################

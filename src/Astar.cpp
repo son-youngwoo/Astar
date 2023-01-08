@@ -3,12 +3,13 @@
 //
 
 #include "Astar.h"
+#include "ros/ros.h"
 
 namespace pathplanning{
 
 void Astar::InitAstar(Mat& _Map, AstarConfig _config)
 {
-    Mat Mask;
+    Mat Mask; // opencv library data type, matrix structure
     InitAstar(_Map, Mask, _config);
 }
 
@@ -27,7 +28,7 @@ void Astar::InitAstar(Mat& _Map, Mat& Mask, AstarConfig _config)
     MapProcess(Mask);
 }
 
-void Astar::PathPlanning(Point _startPoint, Point _targetPoint, vector<Point>& path)
+void Astar::PathPlanning(Point _startPoint, Point _targetPoint, vector<Point>& path) // 1
 {
     // Get variables
     startPoint = _startPoint;
@@ -114,7 +115,8 @@ Node* Astar::FindPath()
     OpenList.push(pair<int, Point>(startPointNode->F, startPointNode->point));
     int index = point2index(startPointNode->point);
     OpenDict[index] = startPointNode;
-    _LabelMap.at<uchar>(startPoint.y, startPoint.x) = inOpenList;
+    _LabelMap.at<uchar>(startPoint.y, startPoint.x) = inOpenList; // 여기서 뭔가 문제가 발생함. !!!!!!!!!!
+                    
 
     while(!OpenList.empty())
     {
